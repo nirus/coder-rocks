@@ -1,37 +1,22 @@
 
-Working with dates in JavaScript can be tricky to say the least. Recently I needed to compare two dates with one another to see which was greater than, less than, etc.
+Above is the youtube video link ID that can be embedded in the `claim.json`. For the legend image of the article page it's
+hardcoded as **hero.jpg**. Upload a legend image with this filename and its automatically picked up by the compiler.
 
-In my particular use case, I was using a date-picker that was returning a string like `01/28/2020`. I needed to see if this date was `>=` to the current day.
+This is an example article to demonstrate all possible markdown styles and custom mods available.
 
-The first thing I needed to do was convert this string into a JavaScript Date Object.
+### Inline code
+This is how the inline code looks like `01/28/2020`. 
 
-```js
-const date: new Date("01/28/2020");
-console.log(date);
-// Tue Jan 28 2020 00:00:00 GMT-0500 (Eastern Standard Time)
-```
+### Screenshot or figure display
+Now an example for screenshot with a caption on the article.
 
-Then, compare this date with the current day:
+![{ caption: "[ This is a sample screen shot ]", width: "500px" }](./screenshot.png)
 
-```js
-const compareDate = new Date("01/28/2020");
-const today = new Date();
-console.log(compareDate >= today);
-// false
-```
+Format like `{ caption: "[ This is a sample screen shot ]", width: "500px" }` is sent as an attribute to the `<img />` inside the `<figure />` tag. `{ caption: "My custom caption"}` is placed inside the `<figcaption />`
 
-The issue is that even though the dates are the same, the times are not.
+### Code
 
-```js
-const compareDate = new Date("01/28/2020");
-const today = new Date();
-console.log("compareDate: ", compareDate);
-console.log("today: ", today);
-// compareDate:  Tue Jan 28 2020 00:00:00 GMT-0500 (Eastern Standard Time)
-// today:  Tue Jan 28 2020 21:33:27 GMT-0500 (Eastern Standard Time)
-```
-
-Notice how `compareDate` has all zero's for time. The difference in time is the reason why this comparison fails. To fix this, we need to create the current day without time. We do this by instantiating a new JS Date object by individually passing in the year, month and day.
+Below is the example javascript code block with syntax highlighting.
 
 ```js
 const todayWithoutTime = new Date(
@@ -42,18 +27,8 @@ const todayWithoutTime = new Date(
 console.log("todayWithoutTime: ", todayWithoutTime);
 // todayWithoutTime:  Tue Jan 28 2020 00:00:00 GMT-0500 (Eastern Standard Time)
 ```
+### Quote display
+Below is an example of a quoted text with credits linking back to author article.
 
-So let's try our comparison again.
-
-```js
-const compareDate = new Date("01/28/2020");
-const todayWithoutTime = new Date(
-  new Date().getFullYear(),
-  new Date().getMonth(),
-  new Date().getDate()
-);
-console.log(compareDate >= todayWithoutTime);
-// true
-```
-
-That's it. Just remember that when comparing dates in JavaScript it is vital to factor in the time. 😎
+> A well-designed system makes it easy to do the right things and annoying (but not impossible) to do the wrong things
+> <div class="quote-credit"><p>– Jeff Atwood</p><a target="_blank" href="https://blog.codinghorror.com/falling-into-the-pit-of-success/">Falling Into The Pit of Success</a></div>
