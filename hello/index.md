@@ -10,7 +10,7 @@ This is how the inline code looks like `01/28/2020`.
 ### Screenshot or figure display
 Now an example for screenshot with a caption on the article.
 
-![{ caption: "[ This is a sample screen shot ]", width: "500px" }](./screenshot.png)
+![{ caption: "[ This is a sample screen shot ]", width: "500px" }](./screenshot.png |width=500)
 
 Format like `{ caption: "[ This is a sample screen shot ]", width: "500px" }` is sent as an attribute to the `<img />` inside the `<figure />` tag. `{ caption: "My custom caption"}` is placed inside the `<figcaption />`
 
