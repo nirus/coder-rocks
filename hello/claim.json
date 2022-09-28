@@ -2,7 +2,7 @@
     "title": "Examples of markdown to compose an article on CoderRocks",
     "pubDate": "2020-01-28",
     "slug": "test-data-for-mdmaker",
-    "description": "This the description for the markdown maker.",
+    "description": "This the description for the page, better SEO.",
     "hero": "hero.jpg",
     "tags": [
         "javascript"
