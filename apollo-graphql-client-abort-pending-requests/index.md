@@ -61,7 +61,7 @@ Subsequent incoming request are looked up using the cache object. If there’s a
 Follow the steps stated in [readme](https://github.com/nirus/fullstack-tutorial/blob/master/README.md#installation) file from the Github repo for installation.
 
 ### Code modifications done for demoing
-I have intentionally introduced a response delay of 5000ms in Login API (server code) to make this POC work.
+I have intentionally introduced a response delay of 5000ms in Login API (server code) to make [this](https://github.com/nirus/fullstack-tutorial) POC work.
 
 Click repeatedly on **login button** and you can see the previous request getting cancelled in the **Chrome – Developer console > Network**.
 
