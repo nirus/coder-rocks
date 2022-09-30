@@ -4,7 +4,7 @@ It all started with a Youtube video by [@LiveOverflow](https://twitter.com/LiveO
 
 Motivated & intrigued to checkout current version of popunder.js and reverse engineer to understand its engine.
 
-To begin with, I cloned the demo site to my local machine, changed few parts to point my localhost (a simple code change). It consists of 5 files, out of which **script.js** is the heart of the engine payload.
+To begin with, I cloned the demo site to my local machine, changed few parts to point my localhost (<i>a simple code change</i>). It consists of 5 files, out of which **script.js** is the heart of the engine payload.
 
 First thing that caught my eye was the defensive code against **Debugger tools**. 
 
