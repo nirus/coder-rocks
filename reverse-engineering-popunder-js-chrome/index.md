@@ -1,6 +1,6 @@
 ### Where it all started?
 
-It all started with a Youtube video by [@LiveOverflow](https://twitter.com/LiveOverflow). Which is awesome by the way. This video talk is on a bit older version of Popunder.js. I have linked it below.
+It all started with a Youtube video by [@LiveOverflow](https://twitter.com/LiveOverflow), which is awesome by the way. This video talk is on a bit older version of [Popunder.js](https://popunderjs.com/).
 
 Motivated & intrigued to checkout current version of popunder.js and reverse engineer to understand its engine.
 
@@ -162,6 +162,6 @@ map.push([this._PDFViewer, function() {
 
 Next section of code is a check for the vulnerable browser versions to exploit (influenced by @LiveOverflow’s reverse engineering disclosure’s) , Like the `window.postMessage` trick that is available in **Chrome ver 68** and below, PDF as an embedded object to gain focus etc.
 
-For all these vulnerabilities & explanation on older version, I would highly recommend to watch @LiveOverflow videos on Youtube.
+For all these vulnerabilities & explanation on older version, I would highly recommend to watch [@LiveOverflow](https://www.youtube.com/c/LiveOverflow) videos on Youtube.
 
 > Let me know what you think. I would be happy to listen to your feedback.
