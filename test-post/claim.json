@@ -1,0 +1,10 @@
+{
+    "title": "Storybook.js custom Webpack setup for SASS",
+    "pubDate": "2020-06-06",
+    "description": "This article is about creating a storybook webpack custom configuration to include common SCSS or SASS variables in all the stories",
+    "tags": [
+        "javascript",
+        "storybook js"
+    ],
+    "author": "nirus"
+}
