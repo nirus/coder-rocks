@@ -16,39 +16,7 @@ So besides the issue i spoke earlier, i had to do a work around to get the proje
 
 Finally i solved it by using [sass-resources-loader](https://www.npmjs.com/package/sass-resources-loader) to load the common SCSS constants by mutating config object. Below is my working webpack configuration for my storybook.
 
-```js
-webpackFinal: async (config, { configType }) => {
-    // `configType` has a value of 'DEVELOPMENT' or 'PRODUCTION'
-    // You can change the configuration based on that.
-    // 'PRODUCTION' is used when building the static version of storybook.
 
-    config.module.rules.map((rule) => {
-      if (rule.oneOf) {
-        rule.oneOf = rule.oneOf.slice().map((subRule) => {
-          if (subRule.test instanceof RegExp && subRule.test.test('.scss')) {
-            return {
-              ...subRule,
-              use: [
-                ...subRule.use,
-                {
-                  loader: require.resolve('sass-resources-loader'),
-                  options: {
-                    resources: [
-                      path.resolve(__dirname, '../src/styles/_common.scss')
-                    ]
-                  }
-                }
-              ],
-            }
-          }
-          return subRule;
-        });
-      }
-      return rule;
-    });
-    return config;
-  },
-```
 
 Full working project with above config can be found on [GitHub](https://github.com/nirus/storybook-issue/tree/work-arround) & this [link](https://github.com/nirus/storybook-issue/blob/597a4df091362dbd61422d7033ef210bdd146f20/.storybook/main.js#L13) for the webpack configuration.
 
