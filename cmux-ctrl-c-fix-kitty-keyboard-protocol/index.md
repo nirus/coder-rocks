@@ -1,4 +1,4 @@
-**TL;DR** — CMUX uses libghostty, which speaks the *kitty keyboard protocol*. That protocol encodes `Ctrl+C` as the escape sequence `\e[99;5u` instead of the single byte `0x03`. Zsh has no idea what `\e[99;5u` means, so it dumps it on screen as `^[[99;5u`. The fix is a block of `bindkey` calls that teach zsh the CSI u vocabulary.
+**TL;DR** — CMUX uses libghostty, which speaks the *kitty keyboard protocol*. That protocol encodes `Ctrl+C` as the escape sequence `\e[99;5u` instead of the single byte `0x03`. Zsh has no idea what `\e[99;5u` means, so it dumps it on screen as `^[[99;5u`. The fix is a three-part defence: pop the keyboard mode CMUX pushes on surface init, drain the residual init bytes from the input buffer, and register `bindkey` calls that teach zsh the CSI u vocabulary.
 
 ---
 
@@ -17,7 +17,7 @@ Every `Ctrl`+key combo produces a similar garbled string. In standalone Ghostty 
 
 ## Background: How Terminals Send Keystrokes
 
-### The Legacy Model (VT100 era to today)
+### The Legacy Model (VT100 era → today)
 
 Traditional terminals encode modified keys by mangling them into a single byte. `Ctrl+C` becomes `0x03` (ASCII ETX). The kernel's tty line discipline watches for that byte and fires `SIGINT`. It's simple, battle-tested, and ambiguous — there is no way to distinguish `Ctrl+I` from `Tab`, or `Ctrl+M` from `Enter`, or `Escape` from `Alt+[`.
 
@@ -90,9 +90,52 @@ In practice, it doesn't help because:
 
 ---
 
-## The Real Fix: Teach Zsh to Speak CSI u
+## The Real Fix: A Three-Layer Defence
 
-Since we can't reliably *prevent* CMUX from sending CSI u sequences, we make zsh *understand* them. The ZLE (Zsh Line Editor) supports arbitrary key sequence to widget bindings via `bindkey`.
+Keybindings alone solve most presses — but the **very first `Ctrl+C`** in a fresh CMUX surface still prints junk. Here's why, and the full fix.
+
+### Why the First Press Leaks
+
+When CMUX creates a terminal surface, libghostty sends a **push keyboard mode** escape (`\e[>1u`) into the pty. That sequence arrives as bytes on zsh's stdin. By the time the shell finishes initialising and ZLE starts reading input, those bytes are sitting in the input buffer:
+
+```
+input buffer (before first keypress):
+  \e [ > 1 u            ← residual push from CMUX surface init
+
+user presses Ctrl+C:
+  \e [ > 1 u \e [ 9 9 ; 5 u
+              ↑ actual Ctrl+C
+
+ZLE tries to match from the start:
+  \e [ > 1 u  → no binding → printed as junk
+```
+
+The first Ctrl+C flushes the residual bytes as garbage. The *second* press arrives on a clean buffer and matches `\e[99;5u` → `send-break` cleanly.
+
+### The Fix: Pop + Drain + Bind
+
+The complete solution has three layers executed during `.zshrc` init, before ZLE ever reads a keypress:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ Layer 1: Pop                                                    │
+│   printf '\e[<u'                                                │
+│   Tell CMUX to drop the pushed keyboard mode.                   │
+│   Works if CMUX honours the pop; harmless if it doesn't.        │
+├─────────────────────────────────────────────────────────────────┤
+│ Layer 2: Drain                                                  │
+│   while read -t 0.01 -k 1 _discard; do :; done                 │
+│   Consume any residual bytes (the push sequence, or fragments   │
+│   of it) still sitting in stdin before ZLE takes over.           │
+├─────────────────────────────────────────────────────────────────┤
+│ Layer 3: Bind                                                   │
+│   bindkey '\e[99;5u' send-break   # … and all other Ctrl+keys  │
+│   Safety net: if CMUX continues sending CSI u despite the pop,  │
+│   ZLE knows how to interpret every sequence.                     │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+Layer 1 alone doesn't reliably work (covered in the previous section). Layer 3 alone leaves the first-press bug. All three together eliminate the junk on every press, including the first.
 
 ### The Encoding Table
 
@@ -124,10 +167,19 @@ Every `Ctrl+<key>` combination has a deterministic CSI u encoding. The codepoint
 Add this to `~/.zshrc`:
 
 ```zsh
-# ── CSI u / Kitty keyboard protocol keybindings (CMUX + libghostty) ──
+# ── CSI u / Kitty keyboard protocol fix (CMUX + libghostty) ──
 # cmux sends modified keys as \e[<code>;<modifier>u (CSI u format).
-# Map Ctrl+key sequences so zsh interprets them correctly.
+# Three-part fix:
+#   1. Pop the kitty keyboard mode pushed by CMUX on surface init
+#   2. Drain any residual init bytes sitting in the input buffer
+#   3. Register ZLE bindings so zsh understands CSI u sequences
 if [[ -n "$CMUX_SOCKET_PATH" ]]; then
+  # (1) Pop kitty keyboard mode — tell the terminal to stop CSI u encoding
+  printf '\e[<u' 2>/dev/null
+  # (2) Drain leftover init sequences from CMUX surface startup
+  while read -t 0.01 -k 1 _cmux_discard 2>/dev/null; do :; done
+  unset _cmux_discard
+  # (3) ZLE keybindings for CSI u encoded Ctrl+key sequences
   bindkey '\e[99;5u'  send-break                          # Ctrl+C
   bindkey '\e[100;5u' delete-char-or-list                  # Ctrl+D
   bindkey '\e[97;5u'  beginning-of-line                    # Ctrl+A
@@ -160,13 +212,17 @@ source ~/.zshrc
 
 ### Why This Works
 
-1. **`bindkey` operates at the ZLE level.** When zsh's line editor is active (i.e. you're at the prompt), it reads bytes from stdin and matches them against its keymap. By registering `\e[99;5u` → `send-break`, ZLE now recognises the CSI u encoding as "Ctrl+C, please interrupt."
+1. **Layer 1 — Pop (`printf '\e[<u'`).** Runs during `.zshrc` init, before ZLE starts. Sends the kitty protocol pop sequence to CMUX's inner pty. If CMUX honours it, subsequent key presses revert to legacy encoding and the `bindkey` mappings become a dormant safety net. If CMUX ignores it, no harm done — layers 2 and 3 pick up the slack.
 
-2. **`send-break` does the right thing.** The ZLE widget `send-break` cancels the current input line and sends `SIGINT` to the shell's process group — identical to what happens when the tty driver sees `0x03`.
+2. **Layer 2 — Drain (`read -t 0.01 -k 1` loop).** Consumes any bytes already in the input buffer — specifically the `\e[>1u` push sequence that CMUX wrote during surface creation. This eliminates the residual-buffer problem that caused the first-press junk. The `0.01` second timeout ensures we only drain what's already buffered without blocking shell startup.
 
-3. **The guard clause keeps it scoped.** The `if [[ -n "$CMUX_SOCKET_PATH" ]]` check ensures these bindings only activate inside CMUX sessions. Regular Ghostty, iTerm2, or SSH sessions are unaffected.
+3. **Layer 3 — Bind (`bindkey` mappings).** Registers every `Ctrl+key` CSI u sequence as a ZLE widget. Even if CMUX continues sending CSI u encoding (because the pop was ignored or re-pushed), ZLE now matches `\e[99;5u` → `send-break` on the first byte, every time.
 
-4. **Ctrl+Z needs special handling.** Unlike other Ctrl keys, `Ctrl+Z` is handled by the tty driver (it sends `SIGTSTP`), not by ZLE. Since the tty driver never sees `0x03`/`0x1a` in CSI u mode, we create a custom ZLE widget that manually sends `SIGTSTP` (signal 18) to the process group `0` (the foreground group).
+4. **`send-break` does the right thing.** The ZLE widget `send-break` cancels the current input line and sends `SIGINT` to the shell's process group — identical to what happens when the tty driver sees `0x03`.
+
+5. **The guard clause keeps it scoped.** The `if [[ -n "$CMUX_SOCKET_PATH" ]]` check ensures these bindings only activate inside CMUX sessions. Regular Ghostty, iTerm2, or SSH sessions are unaffected.
+
+6. **Ctrl+Z needs special handling.** Unlike other Ctrl keys, `Ctrl+Z` is handled by the tty driver (it sends `SIGTSTP`), not by ZLE. Since the tty driver never sees `0x03`/`0x1a` in CSI u mode, we create a custom ZLE widget that manually sends `SIGTSTP` (signal 18) to the process group `0` (the foreground group).
 
 ---
 
