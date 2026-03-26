@@ -6,8 +6,20 @@ jobs:
   trigger:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect new posts
+        id: detect
+        run: |
+          NEW_POSTS=$(git diff HEAD~1 HEAD --diff-filter=A --name-only | grep 'claim.json' | sed 's|/claim.json||' | tr '\n' ',' | sed 's/,$//')
+          echo "new_posts=$NEW_POSTS" >> "$GITHUB_OUTPUT"
+          echo "Detected new posts: $NEW_POSTS"
+
       - uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.CR_ENGINE_TRIGGER_TOKEN }}
           repository: nirus/cr-engine
           event-type: content-update
+          client-payload: '{"new_posts": "${{ steps.detect.outputs.new_posts }}"}'
