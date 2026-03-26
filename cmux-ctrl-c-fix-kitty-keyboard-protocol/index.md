@@ -35,7 +35,7 @@ Where:
 |-----------|---------|
 | `CSI`     | `\e[` — the Control Sequence Introducer |
 | codepoint | Unicode code point of the key (e.g. `99` = `c`) |
-| modifiers | Bitmask: `2`=Shift, `3`=Alt, `5`=Ctrl, `6`=Ctrl+Shift, `7`=Ctrl+Alt, `8`=Ctrl+Alt+Shift |
+| modifiers | Bitmask (see appendix) |
 | `u`       | Literal `u` — the sequence terminator |
 
 So `Ctrl+C` becomes:
@@ -108,26 +108,26 @@ Layer 1 alone doesn't reliably work (covered in the previous section). Layer 3 a
 
 Every `Ctrl+<key>` combination has a deterministic CSI u encoding. The codepoint is the lowercase ASCII value; the modifier is `5` (Ctrl):
 
-| Key     | Codepoint | CSI u Sequence   | Zsh Widget                               |
-|---------|-----------|-------------------|------------------------------------------|
-| Ctrl+A  | 97        | `\e[97;5u`        | `beginning-of-line`                      |
-| Ctrl+B  | 98        | `\e[98;5u`        | `backward-char`                          |
-| Ctrl+C  | 99        | `\e[99;5u`        | `send-break`                             |
-| Ctrl+D  | 100       | `\e[100;5u`       | `delete-char-or-list`                    |
-| Ctrl+E  | 101       | `\e[101;5u`       | `end-of-line`                            |
-| Ctrl+F  | 102       | `\e[102;5u`       | `forward-char`                           |
-| Ctrl+H  | 104       | `\e[104;5u`       | `backward-delete-char` (Backspace)       |
-| Ctrl+K  | 107       | `\e[107;5u`       | `kill-line`                              |
-| Ctrl+L  | 108       | `\e[108;5u`       | `clear-screen`                           |
-| Ctrl+N  | 110       | `\e[110;5u`       | `down-line-or-history`                   |
-| Ctrl+P  | 112       | `\e[112;5u`       | `up-line-or-history`                     |
-| Ctrl+R  | 114       | `\e[114;5u`       | `history-incremental-search-backward`    |
-| Ctrl+S  | 115       | `\e[115;5u`       | `history-incremental-search-forward`     |
-| Ctrl+T  | 116       | `\e[116;5u`       | `transpose-chars`                        |
-| Ctrl+U  | 117       | `\e[117;5u`       | `kill-whole-line`                        |
-| Ctrl+W  | 119       | `\e[119;5u`       | `backward-kill-word`                     |
-| Ctrl+Y  | 121       | `\e[121;5u`       | `yank`                                   |
-| Ctrl+Z  | 122       | `\e[122;5u`       | custom: `kill -TSTP 0`                   |
+| Key | Sequence | Widget |
+|-----|----------|--------|
+| ^A | `\e[97;5u` | `beginning-of-line` |
+| ^B | `\e[98;5u` | `backward-char` |
+| ^C | `\e[99;5u` | `send-break` |
+| ^D | `\e[100;5u` | `delete-char-or-list` |
+| ^E | `\e[101;5u` | `end-of-line` |
+| ^F | `\e[102;5u` | `forward-char` |
+| ^H | `\e[104;5u` | `backward-delete-char` |
+| ^K | `\e[107;5u` | `kill-line` |
+| ^L | `\e[108;5u` | `clear-screen` |
+| ^N | `\e[110;5u` | `down-line-or-history` |
+| ^P | `\e[112;5u` | `up-line-or-history` |
+| ^R | `\e[114;5u` | `history-incremental-search-backward` |
+| ^S | `\e[115;5u` | `history-incremental-search-forward` |
+| ^T | `\e[116;5u` | `transpose-chars` |
+| ^U | `\e[117;5u` | `kill-whole-line` |
+| ^W | `\e[119;5u` | `backward-kill-word` |
+| ^Y | `\e[121;5u` | `yank` |
+| ^Z | `\e[122;5u` | custom: `kill -TSTP 0` |
 
 ### The Code
 
@@ -159,8 +159,10 @@ if [[ -n "$CMUX_SOCKET_PATH" ]]; then
   bindkey '\e[108;5u' clear-screen         # ^L
   bindkey '\e[110;5u' down-line-or-history # ^N
   bindkey '\e[112;5u' up-line-or-history   # ^P
-  bindkey '\e[114;5u' history-incremental-search-backward # ^R
-  bindkey '\e[115;5u' history-incremental-search-forward  # ^S
+  bindkey '\e[114;5u' \
+    history-incremental-search-backward # ^R
+  bindkey '\e[115;5u' \
+    history-incremental-search-forward  # ^S
   bindkey '\e[116;5u' transpose-chars      # ^T
   bindkey '\e[117;5u' kill-whole-line      # ^U
   bindkey '\e[119;5u' backward-kill-word   # ^W
