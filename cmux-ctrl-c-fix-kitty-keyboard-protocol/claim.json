@@ -1,0 +1,12 @@
+{
+    "title": "Why Ctrl+C Prints Junk in CMUX — and How to Fix It",
+    "pubDate": "2026-03-26",
+    "description": "CMUX uses libghostty which speaks the kitty keyboard protocol, encoding Ctrl+C as CSI u sequences that zsh can't understand. Here's why it happens and how to fix it with bindkey.",
+    "tags": [
+        "terminal",
+        "zsh",
+        "CMUX",
+        "Ghostty"
+    ],
+    "author": "nirus"
+}
