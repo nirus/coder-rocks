@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" font-family="'SF Mono', 'Fira Code', 'Cascadia Code', monospace">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="720" height="420" rx="12" fill="url(#bg)"/>
+
+  <!-- Layer 1: Pop -->
+  <rect x="30" y="25" width="660" height="110" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+  <text x="50" y="55" fill="#60a5fa" font-size="15" font-weight="bold">Layer 1: Pop</text>
+  <text x="50" y="80" fill="#e2e8f0" font-size="13">printf '\e[&lt;u'</text>
+  <text x="50" y="100" fill="#94a3b8" font-size="12">Tell CMUX to drop the pushed keyboard mode.</text>
+  <text x="50" y="120" fill="#94a3b8" font-size="12">Works if CMUX honours the pop; harmless if it doesn't.</text>
+
+  <!-- Layer 2: Drain -->
+  <rect x="30" y="155" width="660" height="110" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+  <text x="50" y="185" fill="#fbbf24" font-size="15" font-weight="bold">Layer 2: Drain</text>
+  <text x="50" y="210" fill="#e2e8f0" font-size="13">while read -t 0.01 -k 1 _discard; do :; done</text>
+  <text x="50" y="230" fill="#94a3b8" font-size="12">Consume any residual bytes (the push sequence, or fragments</text>
+  <text x="50" y="250" fill="#94a3b8" font-size="12">of it) still sitting in stdin before ZLE takes over.</text>
+
+  <!-- Layer 3: Bind -->
+  <rect x="30" y="285" width="660" height="110" rx="8" fill="#1e293b" stroke="#22c55e" stroke-width="2"/>
+  <text x="50" y="315" fill="#4ade80" font-size="15" font-weight="bold">Layer 3: Bind</text>
+  <text x="50" y="340" fill="#e2e8f0" font-size="13">bindkey '\e[99;5u' send-break   # ... and all other Ctrl+keys</text>
+  <text x="50" y="360" fill="#94a3b8" font-size="12">Safety net: if CMUX continues sending CSI u despite the pop,</text>
+  <text x="50" y="380" fill="#94a3b8" font-size="12">ZLE knows how to interpret every sequence.</text>
+</svg>

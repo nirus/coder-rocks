@@ -92,17 +92,7 @@ Keybindings alone solve most presses — but the **very first `Ctrl+C`** in a fr
 
 When CMUX creates a terminal surface, libghostty sends a **push keyboard mode** escape (`\e[>1u`) into the pty. That sequence arrives as bytes on zsh's stdin. By the time the shell finishes initialising and ZLE starts reading input, those bytes are sitting in the input buffer:
 
-```
-input buffer (before first keypress):
-  \e [ > 1 u            ← residual push from CMUX surface init
-
-user presses Ctrl+C:
-  \e [ > 1 u \e [ 9 9 ; 5 u
-              ↑ actual Ctrl+C
-
-ZLE tries to match from the start:
-  \e [ > 1 u  → no binding → printed as junk
-```
+![Input buffer showing residual CMUX push bytes corrupting the first Ctrl+C keypress](input-buffer.svg)
 
 The first Ctrl+C flushes the residual bytes as garbage. The *second* press arrives on a clean buffer and matches `\e[99;5u` → `send-break` cleanly.
 
@@ -110,24 +100,7 @@ The first Ctrl+C flushes the residual bytes as garbage. The *second* press arriv
 
 The complete solution has three layers executed during `.zshrc` init, before ZLE ever reads a keypress:
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│ Layer 1: Pop                                                    │
-│   printf '\e[<u'                                                │
-│   Tell CMUX to drop the pushed keyboard mode.                   │
-│   Works if CMUX honours the pop; harmless if it doesn't.        │
-├─────────────────────────────────────────────────────────────────┤
-│ Layer 2: Drain                                                  │
-│   while read -t 0.01 -k 1 _discard; do :; done                 │
-│   Consume any residual bytes (the push sequence, or fragments   │
-│   of it) still sitting in stdin before ZLE takes over.           │
-├─────────────────────────────────────────────────────────────────┤
-│ Layer 3: Bind                                                   │
-│   bindkey '\e[99;5u' send-break   # … and all other Ctrl+keys  │
-│   Safety net: if CMUX continues sending CSI u despite the pop,  │
-│   ZLE knows how to interpret every sequence.                     │
-└─────────────────────────────────────────────────────────────────┘
-```
+![Three-layer fix: Pop the keyboard mode, Drain residual bytes, Bind CSI u sequences](three-layer-fix.svg)
 
 Layer 1 alone doesn't reliably work (covered in the previous section). Layer 3 alone leaves the first-press bug. All three together eliminate the junk on every press, including the first.
 
