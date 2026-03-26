@@ -1,0 +1,13 @@
+name: Trigger CR-Engine Build
+on:
+  push:
+    branches: [publish]
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.CR_ENGINE_TRIGGER_TOKEN }}
+          repository: nirus/cr-engine
+          event-type: content-update
