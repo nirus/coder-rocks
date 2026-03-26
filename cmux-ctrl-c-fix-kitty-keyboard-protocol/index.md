@@ -57,13 +57,7 @@ Ghostty implements the full kitty keyboard protocol. But it only sends CSI u seq
 
 CMUX is a terminal multiplexer built on **libghostty** — the same rendering and input engine as standalone Ghostty, extracted as a library. CMUX sits between the outer terminal (Ghostty, iTerm2, whatever) and your shell:
 
-```
-┌──────────┐     ┌──────────┐     ┌──────────┐
-│  Ghostty │ ──▶ │  CMUX    │ ──▶ │  zsh     │
-│ (outer)  │     │(libghostty)    │ (inner)  │
-└──────────┘     └──────────┘     └──────────┘
-    keys            CSI u?           WTF?
-```
+![CMUX flow: Ghostty sends keys to CMUX (libghostty) which sends CSI u sequences to zsh](cmux-flow.svg)
 
 The issue: CMUX's terminal emulation layer (libghostty) writes modified key presses to the inner pty using CSI u encoding — even when the child application (zsh) never requested it. This is likely because libghostty defaults to advertising the kitty keyboard protocol to the *outer* terminal but doesn't gate the *inner* encoding on an explicit push from the child shell.
 
