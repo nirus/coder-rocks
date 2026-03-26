@@ -23,8 +23,18 @@ When a blog post needs a diagram, flow chart, or visual explanation, create an *
   - Text: `#e2e8f0` (primary), `#94a3b8` (secondary), `#64748b` (muted)
   - Accent borders: blue `#3b82f6`, amber `#f59e0b`, green `#22c55e`, red `#ef4444`
   - Monospace font stack: `'SF Mono', 'Fira Code', 'Cascadia Code', monospace`
+- Always include `width="100%" height="auto"` on the root `<svg>` element so diagrams scale on mobile
 - Reference in markdown as: `![alt text](filename.svg)`
 - Small inline annotated snippets (e.g. a 4-line code breakdown) are fine as code blocks — SVGs are for structural/architectural diagrams
+
+## Mobile compatibility
+
+Site must render correctly on both desktop and mobile. The blog engine (cr-engine) does not add `overflow-x: hidden` or `max-width: 100%` on all elements, so content itself must stay within narrow viewports (~430px).
+
+Common overflow culprits and fixes:
+- **Code blocks**: Keep lines under ~50 characters. Use `\` line continuation for long statements. Use short inline comments (`# ^C` not `# Ctrl+C`). Remove trailing whitespace padding.
+- **Markdown tables**: Minimize columns. Use short labels (`^A` not `Ctrl+A`). Drop columns that can be inferred. Move dense reference data to an appendix or a separate table.
+- **SVGs**: Always set `width="100%" height="auto"` (see Diagrams section above).
 
 ## Images
 
