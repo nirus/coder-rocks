@@ -134,40 +134,41 @@ Every `Ctrl+<key>` combination has a deterministic CSI u encoding. The codepoint
 Add this to `~/.zshrc`:
 
 ```zsh
-# ── CSI u / Kitty keyboard protocol fix (CMUX + libghostty) ──
-# cmux sends modified keys as \e[<code>;<modifier>u (CSI u format).
+# CSI u / Kitty keyboard protocol fix
+# (CMUX + libghostty)
+#
 # Three-part fix:
-#   1. Pop the kitty keyboard mode pushed by CMUX on surface init
-#   2. Drain any residual init bytes sitting in the input buffer
-#   3. Register ZLE bindings so zsh understands CSI u sequences
+#  1. Pop the keyboard mode CMUX pushes
+#  2. Drain residual init bytes from stdin
+#  3. Register ZLE bindings for CSI u
 if [[ -n "$CMUX_SOCKET_PATH" ]]; then
-  # (1) Pop kitty keyboard mode — tell the terminal to stop CSI u encoding
+  # (1) Pop kitty keyboard mode
   printf '\e[<u' 2>/dev/null
-  # (2) Drain leftover init sequences from CMUX surface startup
-  while read -t 0.01 -k 1 _cmux_discard 2>/dev/null; do :; done
-  unset _cmux_discard
-  # (3) ZLE keybindings for CSI u encoded Ctrl+key sequences
-  bindkey '\e[99;5u'  send-break                          # Ctrl+C
-  bindkey '\e[100;5u' delete-char-or-list                  # Ctrl+D
-  bindkey '\e[97;5u'  beginning-of-line                    # Ctrl+A
-  bindkey '\e[101;5u' end-of-line                          # Ctrl+E
-  bindkey '\e[102;5u' forward-char                         # Ctrl+F
-  bindkey '\e[98;5u'  backward-char                        # Ctrl+B
-  bindkey '\e[107;5u' kill-line                             # Ctrl+K
-  bindkey '\e[117;5u' kill-whole-line                       # Ctrl+U
-  bindkey '\e[119;5u' backward-kill-word                    # Ctrl+W
-  bindkey '\e[108;5u' clear-screen                          # Ctrl+L
-  bindkey '\e[114;5u' history-incremental-search-backward   # Ctrl+R
-  bindkey '\e[115;5u' history-incremental-search-forward    # Ctrl+S
-  bindkey '\e[112;5u' up-line-or-history                    # Ctrl+P
-  bindkey '\e[110;5u' down-line-or-history                  # Ctrl+N
-  bindkey '\e[116;5u' transpose-chars                       # Ctrl+T
-  bindkey '\e[121;5u' yank                                  # Ctrl+Y
-  bindkey '\e[104;5u' backward-delete-char                  # Ctrl+H (backspace)
-  # Ctrl+Z: send SIGTSTP to the foreground process group
+  # (2) Drain leftover init sequences
+  while read -t 0.01 -k 1 _d 2>/dev/null
+  do :; done; unset _d
+  # (3) Ctrl+key CSI u → ZLE widget
+  bindkey '\e[97;5u'  beginning-of-line    # ^A
+  bindkey '\e[98;5u'  backward-char        # ^B
+  bindkey '\e[99;5u'  send-break           # ^C
+  bindkey '\e[100;5u' delete-char-or-list  # ^D
+  bindkey '\e[101;5u' end-of-line          # ^E
+  bindkey '\e[102;5u' forward-char         # ^F
+  bindkey '\e[104;5u' backward-delete-char # ^H
+  bindkey '\e[107;5u' kill-line            # ^K
+  bindkey '\e[108;5u' clear-screen         # ^L
+  bindkey '\e[110;5u' down-line-or-history # ^N
+  bindkey '\e[112;5u' up-line-or-history   # ^P
+  bindkey '\e[114;5u' history-incremental-search-backward # ^R
+  bindkey '\e[115;5u' history-incremental-search-forward  # ^S
+  bindkey '\e[116;5u' transpose-chars      # ^T
+  bindkey '\e[117;5u' kill-whole-line      # ^U
+  bindkey '\e[119;5u' backward-kill-word   # ^W
+  bindkey '\e[121;5u' yank                 # ^Y
+  # ^Z: send SIGTSTP to foreground group
   _cmux_ctrl_z() { kill -TSTP 0; }
   zle -N _cmux_ctrl_z
-  bindkey '\e[122;5u' _cmux_ctrl_z                          # Ctrl+Z
+  bindkey '\e[122;5u' _cmux_ctrl_z        # ^Z
 fi
 ```
 
