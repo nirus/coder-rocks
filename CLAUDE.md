@@ -41,3 +41,13 @@ Common overflow culprits and fixes:
 - Compress hero images to JPEG at 80% quality using `sips` (built-in macOS tool)
 - Target size: under 300KB for hero images
 - Command: `sips -s format jpeg -s formatOptions 80 input.png --out hero.jpg`
+
+## Commits and PRs
+
+Follow [Conventional Commits](https://www.conventionalcommits.org/). Allowed prefixes:
+
+- `feat:` — new feature or blog post (triggers publish)
+- `fix:` — bug fix (triggers publish)
+- `chore:` — maintenance, config, dependency updates
+
+PR titles must use the same format (e.g. `feat: add post on terminal multiplexers`). Merging a `feat:` or `fix:` PR to `publish` triggers a deploy.
