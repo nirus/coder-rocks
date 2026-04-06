@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 680 820">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <marker id="a2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="#475569"/>
+    </marker>
+    <marker id="a2g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="#22c55e"/>
+    </marker>
+    <marker id="a2y" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="#f59e0b"/>
+    </marker>
+  </defs>
+
+  <rect width="680" height="820" fill="url(#bg2)" rx="12"/>
+
+  <!-- Title -->
+  <text x="340" y="32" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="14" font-weight="bold" text-anchor="middle">Complete Request Lifecycle</text>
+  <text x="340" y="50" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10" text-anchor="middle">Input → API → Tool Execution → Response</text>
+
+  <!-- LAYER 2: StructuredIO -->
+  <text x="46" y="82" fill="#3b82f6" font-family="'SF Mono','Fira Code',monospace" font-size="9" font-weight="bold">L2</text>
+  <rect x="70" y="68" width="570" height="36" rx="5" fill="none" stroke="#3b82f6" stroke-width="1"/>
+  <text x="355" y="84" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11" text-anchor="middle">StructuredIO.read() → processLine()</text>
+  <text x="355" y="98" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="9" text-anchor="middle">JSON parse, dedup, drop keep_alive</text>
+
+  <!-- Arrow -->
+  <line x1="355" y1="104" x2="355" y2="124" stroke="#475569" stroke-width="1.5" marker-end="url(#a2)"/>
+
+  <!-- LAYER 2: print.ts -->
+  <text x="46" y="140" fill="#3b82f6" font-family="'SF Mono','Fira Code',monospace" font-size="9" font-weight="bold">L2</text>
+  <rect x="70" y="126" width="570" height="36" rx="5" fill="none" stroke="#3b82f6" stroke-width="1"/>
+  <text x="355" y="142" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11" text-anchor="middle">print.ts → enqueue → run()</text>
+  <text x="355" y="156" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="9" text-anchor="middle">Command queue, AbortController</text>
+
+  <!-- Arrow -->
+  <line x1="355" y1="162" x2="355" y2="182" stroke="#475569" stroke-width="1.5" marker-end="url(#a2)"/>
+
+  <!-- LAYER 3: QueryEngine -->
+  <text x="46" y="198" fill="#f59e0b" font-family="'SF Mono','Fira Code',monospace" font-size="9" font-weight="bold">L3</text>
+  <rect x="70" y="184" width="570" height="36" rx="5" fill="none" stroke="#f59e0b" stroke-width="1"/>
+  <text x="355" y="200" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11" text-anchor="middle">QueryEngine.submitMessage()</text>
+  <text x="355" y="214" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="9" text-anchor="middle">System prompt, slash commands, hooks</text>
+
+  <!-- Arrow -->
+  <line x1="355" y1="220" x2="355" y2="240" stroke="#475569" stroke-width="1.5" marker-end="url(#a2)"/>
+
+  <!-- LAYER 4: queryLoop (highlighted) -->
+  <text x="46" y="262" fill="#f59e0b" font-family="'SF Mono','Fira Code',monospace" font-size="9" font-weight="bold">L4</text>
+  <rect x="70" y="242" width="570" height="48" rx="6" fill="#1c1917" stroke="#f59e0b" stroke-width="2"/>
+  <text x="355" y="262" fill="#fcd34d" font-family="'SF Mono','Fira Code',monospace" font-size="12" text-anchor="middle" font-weight="bold">queryLoop() — while(true)</text>
+  <text x="355" y="280" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="9" text-anchor="middle">The agentic core: model → tools → loop</text>
+
+  <!-- Arrow -->
+  <line x1="355" y1="290" x2="355" y2="310" stroke="#475569" stroke-width="1.5" marker-end="url(#a2)"/>
+
+  <!-- LAYER 5: API Call -->
+  <text x="46" y="326" fill="#22c55e" font-family="'SF Mono','Fira Code',monospace" font-size="9" font-weight="bold">L5</text>
+  <rect x="70" y="312" width="570" height="36" rx="5" fill="none" stroke="#22c55e" stroke-width="1"/>
+  <text x="355" y="328" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11" text-anchor="middle">queryModelWithStreaming()</text>
+  <text x="355" y="342" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="9" text-anchor="middle">anthropic.messages.create({ stream: true })</text>
+
+  <!-- Split into Auth and Stream -->
+  <line x1="250" y1="348" x2="250" y2="368" stroke="#475569" stroke-width="1" marker-end="url(#a2)"/>
+  <line x1="460" y1="348" x2="460" y2="368" stroke="#475569" stroke-width="1" marker-end="url(#a2)"/>
+
+  <!-- LAYER 6: Auth -->
+  <text x="88" y="387" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="8">L6</text>
+  <rect x="110" y="372" width="240" height="30" rx="4" fill="none" stroke="#22c55e" stroke-width="0.8"/>
+  <text x="230" y="391" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="10" text-anchor="middle">OAuth / APIKey / Bedrock</text>
+
+  <!-- Stream events -->
+  <rect x="380" y="372" width="240" height="30" rx="4" fill="none" stroke="#22c55e" stroke-width="0.8"/>
+  <text x="500" y="391" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="10" text-anchor="middle">SSE: deltas → messages</text>
+
+  <!-- Merge and arrow down -->
+  <line x1="250" y1="402" x2="250" y2="416" stroke="#475569" stroke-width="1"/>
+  <line x1="460" y1="402" x2="460" y2="416" stroke="#475569" stroke-width="1"/>
+  <line x1="250" y1="416" x2="460" y2="416" stroke="#475569" stroke-width="1"/>
+  <line x1="355" y1="416" x2="355" y2="436" stroke="#475569" stroke-width="1.5" marker-end="url(#a2)"/>
+
+  <!-- Decision diamond (simplified as rounded rect) -->
+  <rect x="215" y="438" width="280" height="32" rx="16" fill="#422006" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="355" y="459" fill="#fcd34d" font-family="'SF Mono','Fira Code',monospace" font-size="11" text-anchor="middle">tool_use blocks present?</text>
+
+  <!-- NO branch — right -->
+  <line x1="495" y1="454" x2="580" y2="454" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="538" y="446" fill="#ef4444" font-family="'SF Mono','Fira Code',monospace" font-size="9" text-anchor="middle">NO</text>
+  <line x1="580" y1="454" x2="580" y2="720" stroke="#ef4444" stroke-width="1.5"/>
+
+  <!-- YES branch — down -->
+  <line x1="355" y1="470" x2="355" y2="500" stroke="#22c55e" stroke-width="1.5" marker-end="url(#a2g)"/>
+  <text x="368" y="490" fill="#22c55e" font-family="'SF Mono','Fira Code',monospace" font-size="9">YES</text>
+
+  <!-- LAYER 7: Tool Execution -->
+  <text x="46" y="524" fill="#ef4444" font-family="'SF Mono','Fira Code',monospace" font-size="9" font-weight="bold">L7</text>
+  <rect x="70" y="502" width="490" height="56" rx="5" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="315" y="520" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11" text-anchor="middle">StreamingToolExecutor</text>
+
+  <!-- Tool chips -->
+  <rect x="90" y="530" width="60" height="20" rx="3" fill="#14532d"/>
+  <text x="120" y="544" fill="#86efac" font-family="'SF Mono','Fira Code',monospace" font-size="9" text-anchor="middle">Bash</text>
+
+  <rect x="160" y="530" width="60" height="20" rx="3" fill="#14532d"/>
+  <text x="190" y="544" fill="#86efac" font-family="'SF Mono','Fira Code',monospace" font-size="9" text-anchor="middle">Read</text>
+
+  <rect x="230" y="530" width="60" height="20" rx="3" fill="#14532d"/>
+  <text x="260" y="544" fill="#86efac" font-family="'SF Mono','Fira Code',monospace" font-size="9" text-anchor="middle">Edit</text>
+
+  <rect x="300" y="530" width="80" height="20" rx="3" fill="#1e3a5f"/>
+  <text x="340" y="544" fill="#93c5fd" font-family="'SF Mono','Fira Code',monospace" font-size="9" text-anchor="middle">Agent→L8</text>
+
+  <rect x="390" y="530" width="70" height="20" rx="3" fill="#1e3a5f"/>
+  <text x="425" y="544" fill="#93c5fd" font-family="'SF Mono','Fira Code',monospace" font-size="9" text-anchor="middle">MCP→L9</text>
+
+  <!-- Arrow down from tool executor -->
+  <line x1="315" y1="558" x2="315" y2="586" stroke="#475569" stroke-width="1.5"/>
+
+  <!-- tool_result label -->
+  <rect x="180" y="588" width="270" height="24" rx="4" fill="#0f172a" stroke="#475569" stroke-width="0.8"/>
+  <text x="315" y="605" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="10" text-anchor="middle">tool_result → UserMessage</text>
+
+  <!-- Loop-back arrow -->
+  <line x1="315" y1="612" x2="315" y2="636" stroke="#475569" stroke-width="1"/>
+  <path d="M 315 636 L 50 636 L 50 266 L 70 266" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#a2y)"/>
+
+  <!-- Loop label -->
+  <text x="34" y="456" fill="#f59e0b" font-family="'SF Mono','Fira Code',monospace" font-size="9" transform="rotate(-90 34 456)">next turn</text>
+
+  <!-- End turn result -->
+  <line x1="580" y1="720" x2="580" y2="738" stroke="#ef4444" stroke-width="1.5"/>
+  <rect x="460" y="738" width="200" height="36" rx="6" fill="#14532d" stroke="#22c55e" stroke-width="2"/>
+  <text x="560" y="756" fill="#86efac" font-family="'SF Mono','Fira Code',monospace" font-size="11" text-anchor="middle" font-weight="bold">yield result{}</text>
+  <text x="560" y="770" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="8" text-anchor="middle">cost, duration, usage</text>
+
+  <!-- Footer -->
+  <text x="340" y="800" fill="#475569" font-family="'SF Mono','Fira Code',monospace" font-size="9" text-anchor="middle">Loop continues until no tool_use or max_turns hit</text>
+</svg>
