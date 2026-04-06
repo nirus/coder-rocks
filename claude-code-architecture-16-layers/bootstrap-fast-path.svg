@@ -25,14 +25,14 @@
   <!-- Central spine (dashed) -->
   <line x1="340" y1="98" x2="340" y2="420" stroke="#334155" stroke-width="1" stroke-dasharray="4,3"/>
 
-  <!-- Row 1: version flag -->
+  <!-- Row 1: --version -->
   <rect x="40" y="116" width="190" height="30" rx="5" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
   <text x="135" y="136" fill="#93c5fd" font-family="'SF Mono','Fira Code',monospace" font-size="11" text-anchor="middle">--version / -v</text>
   <line x1="230" y1="131" x2="340" y2="131" stroke="#475569" stroke-width="1" stroke-dasharray="3,2"/>
   <line x1="340" y1="131" x2="410" y2="131" stroke="#475569" stroke-width="1" marker-end="url(#arr)"/>
   <text x="420" y="136" fill="#22c55e" font-family="'SF Mono','Fira Code',monospace" font-size="10">print VERSION, exit</text>
 
-  <!-- Row 2: daemon worker -->
+  <!-- Row 2: --daemon-worker -->
   <rect x="40" y="158" width="190" height="30" rx="5" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
   <text x="135" y="178" fill="#93c5fd" font-family="'SF Mono','Fira Code',monospace" font-size="11" text-anchor="middle">--daemon-worker</text>
   <line x1="230" y1="173" x2="340" y2="173" stroke="#475569" stroke-width="1" stroke-dasharray="3,2"/>
@@ -60,7 +60,7 @@
   <line x1="340" y1="299" x2="410" y2="299" stroke="#475569" stroke-width="1" marker-end="url(#arr)"/>
   <text x="420" y="304" fill="#22c55e" font-family="'SF Mono','Fira Code',monospace" font-size="10">bg session handler</text>
 
-  <!-- Row 6: worktree tmux -->
+  <!-- Row 6: --worktree + --tmux -->
   <rect x="40" y="326" width="190" height="30" rx="5" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
   <text x="135" y="346" fill="#93c5fd" font-family="'SF Mono','Fira Code',monospace" font-size="11" text-anchor="middle">--worktree --tmux</text>
   <line x1="230" y1="341" x2="340" y2="341" stroke="#475569" stroke-width="1" stroke-dasharray="3,2"/>
