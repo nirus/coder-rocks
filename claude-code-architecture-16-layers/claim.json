@@ -1,0 +1,12 @@
+{
+    "title": "Inside Claude Code: A 16-Layer Architecture Map From Source",
+    "pubDate": "2026-04-07",
+    "description": "A source-level deep dive into Claude Code's architecture — from fast-path bootstrap to the agentic query loop, streaming tool execution, subagent forking, MCP integration, and remote bridge transports. Every layer mapped with function signatures and data flows.",
+    "tags": [
+        "claude-code",
+        "architecture",
+        "reverse-engineering",
+        "AI tooling"
+    ],
+    "author": "claude"
+}

@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 680 740">
+  <defs>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="680" height="740" fill="url(#bg3)" rx="12"/>
+
+  <!-- Title -->
+  <text x="340" y="32" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="14" font-weight="bold" text-anchor="middle">Claude Code — 16 Layers at a Glance</text>
+
+  <!-- Column headers -->
+  <text x="50" y="60" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="9">#</text>
+  <text x="80" y="60" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="9">LAYER NAME</text>
+  <text x="360" y="60" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="9">KEY FILE</text>
+  <line x1="36" y1="68" x2="644" y2="68" stroke="#334155" stroke-width="0.5"/>
+
+  <!-- ═══ ENTRY GROUP ═══ -->
+  <rect x="36" y="74" width="608" height="100" rx="4" fill="#172554" fill-opacity="0.2"/>
+  <text x="46" y="90" fill="#3b82f6" font-family="'SF Mono','Fira Code',monospace" font-size="8" font-weight="bold">ENTRY</text>
+
+  <!-- Row 0 -->
+  <text x="50" y="112" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="11">0</text>
+  <text x="80" y="112" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11">Bootstrap</text>
+  <text x="360" y="112" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">cli.tsx</text>
+  <text x="500" y="112" fill="#475569" font-family="'SF Mono','Fira Code',monospace" font-size="9">302 lines</text>
+
+  <!-- Row 1 -->
+  <text x="50" y="134" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="11">1</text>
+  <text x="80" y="134" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11">CLI Router</text>
+  <text x="360" y="134" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">main.tsx</text>
+  <text x="500" y="134" fill="#475569" font-family="'SF Mono','Fira Code',monospace" font-size="9">4500+ lines</text>
+
+  <!-- Row 2 -->
+  <text x="50" y="156" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="11">2</text>
+  <text x="80" y="156" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11">Headless IO</text>
+  <text x="360" y="156" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">print.ts</text>
+  <text x="500" y="156" fill="#475569" font-family="'SF Mono','Fira Code',monospace" font-size="9">4400 lines</text>
+
+  <!-- ═══ CORE LOOP GROUP ═══ -->
+  <rect x="36" y="180" width="608" height="112" rx="4" fill="#422006" fill-opacity="0.2"/>
+  <text x="46" y="196" fill="#f59e0b" font-family="'SF Mono','Fira Code',monospace" font-size="8" font-weight="bold">CORE LOOP</text>
+
+  <!-- Row 3 -->
+  <text x="50" y="218" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="11">3</text>
+  <text x="80" y="218" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11">Query Engine</text>
+  <text x="360" y="218" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">QueryEngine.ts</text>
+
+  <!-- Row 4 (highlighted) -->
+  <text x="50" y="240" fill="#fcd34d" font-family="'SF Mono','Fira Code',monospace" font-size="11" font-weight="bold">4</text>
+  <text x="80" y="240" fill="#fcd34d" font-family="'SF Mono','Fira Code',monospace" font-size="11" font-weight="bold">Query Loop</text>
+  <text x="360" y="240" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">query.ts</text>
+  <text x="500" y="240" fill="#475569" font-family="'SF Mono','Fira Code',monospace" font-size="9">1729 lines</text>
+
+  <!-- Row 5 -->
+  <text x="50" y="262" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="11">5</text>
+  <text x="80" y="262" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11">Model API</text>
+  <text x="360" y="262" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">api/claude.ts</text>
+  <text x="500" y="262" fill="#475569" font-family="'SF Mono','Fira Code',monospace" font-size="9">2300+ lines</text>
+
+  <!-- Row 6 -->
+  <text x="50" y="284" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="11">6</text>
+  <text x="80" y="284" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11">Authentication</text>
+  <text x="360" y="284" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">client.ts, auth.ts</text>
+
+  <!-- ═══ TOOLS & AGENTS GROUP ═══ -->
+  <rect x="36" y="298" width="608" height="90" rx="4" fill="#052e16" fill-opacity="0.2"/>
+  <text x="46" y="314" fill="#22c55e" font-family="'SF Mono','Fira Code',monospace" font-size="8" font-weight="bold">TOOLS &amp; AGENTS</text>
+
+  <!-- Row 7 -->
+  <text x="50" y="336" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="11">7</text>
+  <text x="80" y="336" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11">Tool System</text>
+  <text x="360" y="336" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">StreamingToolExecutor</text>
+
+  <!-- Row 8 -->
+  <text x="50" y="358" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="11">8</text>
+  <text x="80" y="358" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11">Subagents</text>
+  <text x="360" y="358" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">runAgent.ts</text>
+
+  <!-- Row 9 -->
+  <text x="50" y="380" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="11">9</text>
+  <text x="80" y="380" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11">MCP</text>
+  <text x="360" y="380" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">mcp/client.ts</text>
+  <text x="500" y="380" fill="#475569" font-family="'SF Mono','Fira Code',monospace" font-size="9">119KB</text>
+
+  <!-- ═══ SERVICES GROUP ═══ -->
+  <rect x="36" y="394" width="608" height="40" rx="4" fill="#1e1b4b" fill-opacity="0.2"/>
+  <text x="46" y="410" fill="#a78bfa" font-family="'SF Mono','Fira Code',monospace" font-size="8" font-weight="bold">SERVICES</text>
+
+  <!-- Row 10 -->
+  <text x="50" y="426" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="11">10</text>
+  <text x="80" y="426" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11">Services</text>
+  <text x="360" y="426" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">analytics, compact, oauth</text>
+
+  <!-- ═══ REMOTE GROUP ═══ -->
+  <rect x="36" y="440" width="608" height="90" rx="4" fill="#450a0a" fill-opacity="0.2"/>
+  <text x="46" y="456" fill="#ef4444" font-family="'SF Mono','Fira Code',monospace" font-size="8" font-weight="bold">REMOTE</text>
+
+  <!-- Row 11 -->
+  <text x="50" y="478" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="11">11</text>
+  <text x="80" y="478" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11">Bridge</text>
+  <text x="360" y="478" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">bridge/</text>
+  <text x="500" y="478" fill="#475569" font-family="'SF Mono','Fira Code',monospace" font-size="9">31 files</text>
+
+  <!-- Row 12 -->
+  <text x="50" y="500" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="11">12</text>
+  <text x="80" y="500" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11">Transports</text>
+  <text x="360" y="500" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">cli/transports/</text>
+  <text x="500" y="500" fill="#475569" font-family="'SF Mono','Fira Code',monospace" font-size="9">7 files</text>
+
+  <!-- Row 13 -->
+  <text x="50" y="522" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="11">13</text>
+  <text x="80" y="522" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11">Session Server</text>
+  <text x="360" y="522" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">server/</text>
+  <text x="500" y="522" fill="#475569" font-family="'SF Mono','Fira Code',monospace" font-size="9">gated</text>
+
+  <!-- ═══ CONFIG & STATE GROUP ═══ -->
+  <rect x="36" y="538" width="608" height="68" rx="4" fill="#1e293b" fill-opacity="0.4"/>
+  <text x="46" y="554" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="8" font-weight="bold">CONFIG &amp; STATE</text>
+
+  <!-- Row 14 -->
+  <text x="50" y="574" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="11">14</text>
+  <text x="80" y="574" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11">Configuration</text>
+  <text x="360" y="574" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">9-level hierarchy</text>
+
+  <!-- Row 15 -->
+  <text x="50" y="596" fill="#94a3b8" font-family="'SF Mono','Fira Code',monospace" font-size="11">15</text>
+  <text x="80" y="596" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="11">Global State</text>
+  <text x="360" y="596" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">bootstrap/state.ts</text>
+  <text x="500" y="596" fill="#475569" font-family="'SF Mono','Fira Code',monospace" font-size="9">1100+ lines</text>
+
+  <!-- ═══ STATS FOOTER ═══ -->
+  <line x1="36" y1="620" x2="644" y2="620" stroke="#334155" stroke-width="0.5"/>
+
+  <text x="50" y="648" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">Source files</text>
+  <text x="240" y="648" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="10">1300+</text>
+
+  <text x="50" y="668" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">Largest file</text>
+  <text x="240" y="668" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="10">main.tsx (~200KB)</text>
+
+  <text x="50" y="688" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">Built-in tools</text>
+  <text x="240" y="688" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="10">~48</text>
+
+  <text x="50" y="708" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">Feature flags</text>
+  <text x="240" y="708" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="10">4 layers</text>
+
+  <text x="50" y="728" fill="#64748b" font-family="'SF Mono','Fira Code',monospace" font-size="10">Cold start</text>
+  <text x="240" y="728" fill="#e2e8f0" font-family="'SF Mono','Fira Code',monospace" font-size="10">~1.3s ready, ~3.5s first tokens</text>
+</svg>
