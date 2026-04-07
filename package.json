@@ -1,0 +1,25 @@
+{
+  "name": "coder-rocks",
+  "version": "1.0.0",
+  "description": "<p align=\"center\">   <img src=\"banner.jpg\" alt=\"CoderRocks — The Agentic Engineering Blog\" width=\"100%\" /> </p>",
+  "main": "index.js",
+  "scripts": {
+    "diagrams": "find . -name '*.mmd' -exec sh -c 'npx mmdc -i \"$1\" -o \"${1%.mmd}.png\" -c .mermaid/config.json -b \"#0f172a\" -s 2' _ {} \\;",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nirus/coder-rocks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nirus/coder-rocks/issues"
+  },
+  "homepage": "https://github.com/nirus/coder-rocks#readme",
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^11.12.0"
+  }
+}

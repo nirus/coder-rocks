@@ -13,19 +13,28 @@ Each blog post is a directory at the repo root with a kebab-case slug:
 
 Powered by `cr-engine`. Main branch is `publish`.
 
-## Diagrams: SVG over ASCII art
+## Diagrams: Mermaid → PNG
 
-When a blog post needs a diagram, flow chart, or visual explanation, create an **SVG file** in the post directory instead of using ASCII art in markdown code blocks.
+When a blog post needs a diagram, flow chart, or visual explanation, use **Mermaid** (`.mmd` files) rendered to PNG. This avoids SVG XML pitfalls and ensures universal rendering.
 
-- Name SVGs descriptively: `cmux-flow.svg`, `three-layer-fix.svg`, `input-buffer.svg`
-- Use dark theme styling to match the blog aesthetic:
-  - Background: `#1e293b` → `#0f172a` gradient
-  - Text: `#e2e8f0` (primary), `#94a3b8` (secondary), `#64748b` (muted)
-  - Accent borders: blue `#3b82f6`, amber `#f59e0b`, green `#22c55e`, red `#ef4444`
-  - Monospace font stack: `'SF Mono', 'Fira Code', 'Cascadia Code', monospace`
-- Always include `width="100%" height="auto"` on the root `<svg>` element so diagrams scale on mobile
-- Reference in markdown as: `![alt text](filename.svg)`
-- Small inline annotated snippets (e.g. a 4-line code breakdown) are fine as code blocks — SVGs are for structural/architectural diagrams
+**Workflow:**
+1. Create a `.mmd` file in the post directory (e.g. `dream-lifecycle.mmd`)
+2. Run `npm run diagrams` to render all `.mmd` files to `.png`
+3. Reference in markdown as: `![alt text](filename.png)`
+
+**Mermaid config** lives in `.mermaid/config.json` (dark theme, monospace font, blog color palette). The `diagrams` script uses it automatically.
+
+**Styling notes (match coder.rocks theme):**
+- Background: `#0a0a0a` (site body)
+- Node fill: `#22272e` (code block bg) or `#262626` (inline code bg)
+- Node border: `#404040`
+- Text: `#e5e5e5` (primary), `#adbac7` (code text), `#666666` (muted)
+- Use `style` directives in `.mmd` files for node-level coloring
+- Output is 2x resolution for retina displays
+
+**Commit both** the `.mmd` source and the `.png` output. The `.mmd` is the editable source of truth; the `.png` is what the blog displays.
+
+Small inline annotated snippets (e.g. a 4-line code breakdown) are fine as code blocks — Mermaid diagrams are for structural/architectural visuals.
 
 ## Mobile compatibility
 
@@ -34,7 +43,7 @@ Site must render correctly on both desktop and mobile. The blog engine (cr-engin
 Common overflow culprits and fixes:
 - **Code blocks**: Keep lines under ~50 characters. Use `\` line continuation for long statements. Use short inline comments (`# ^C` not `# Ctrl+C`). Remove trailing whitespace padding.
 - **Markdown tables**: Minimize columns. Use short labels (`^A` not `Ctrl+A`). Drop columns that can be inferred. Move dense reference data to an appendix or a separate table.
-- **SVGs**: Always set `width="100%" height="auto"` (see Diagrams section above).
+- **Diagrams**: Use Mermaid → PNG pipeline (see Diagrams section). PNGs scale naturally and never overflow.
 
 ## Images
 

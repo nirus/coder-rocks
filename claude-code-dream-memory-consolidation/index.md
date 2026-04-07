@@ -28,7 +28,7 @@ The biological metaphor runs deep. Dream:
 
 This is the first AI coding tool we have seen that implements offline knowledge management as a first-class background process.
 
-![Dream Lifecycle](dream-lifecycle.svg)
+![Dream Lifecycle](dream-lifecycle.png)
 
 ---
 
