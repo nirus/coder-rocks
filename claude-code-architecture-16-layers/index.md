@@ -114,10 +114,10 @@ This layer implements the NDJSON (newline-delimited JSON) protocol for headless 
 
 ```
 STDIN (raw bytes)
-  → StructuredIO.read()      — async generator
-  → processLine()            — JSON.parse, normalize
+  → StructuredIO.read()   — async generator
+  → processLine()         — JSON parse
   → yield StdinMessage
-  → print.ts message loop    — dispatch by type
+  → print.ts loop         — dispatch by type
 ```
 
 `processLine()` silently drops `keep_alive` messages, applies `update_environment_variables` to `process.env`, and deduplicates `control_response` messages with a set capped at 1000 entries.
@@ -243,7 +243,7 @@ This layer performs the actual HTTP call to the Anthropic API.
 ```
 queryModelWithStreaming()
   → queryModel()
-    → Pre-flight: off-switch, tool schemas, betas
+    → Pre-flight: tool schemas, betas
     → anthropic.beta.messages.create({
         stream: true,
         messages, system, tools, thinking
@@ -256,10 +256,10 @@ The stream processing loop handles five SSE event types:
 | Event | Action |
 |-------|--------|
 | `message_start` | Init usage tracking |
-| `content_block_start` | Init text/tool/thinking block |
-| `content_block_delta` | Append to block, yield event |
-| `content_block_stop` | Create AssistantMessage |
-| `message_delta` | Update usage, check refusal |
+| `block_start` | Init text/tool/thinking |
+| `block_delta` | Append, yield event |
+| `block_stop` | Create AssistantMessage |
+| `message_delta` | Update usage, refusal |
 
 ### Error Recovery
 
@@ -267,12 +267,12 @@ The API layer uses graduated error recovery:
 
 | Error | Recovery |
 |-------|----------|
-| 529/overloaded | Exponential backoff: 1s, 2s, 4s...60s cap |
-| 401/unauthorized | OAuth refresh, single retry |
-| `prompt_too_long` | Reactive compact, retry |
-| Stream timeout | Non-streaming fallback (120-300s) |
-| `max_tokens` | Escalate limit, recovery msg (3 tries) |
-| Rate limit | Backoff, emit rate limit event |
+| 529 overloaded | Backoff 1s→2s→4s...60s |
+| 401 unauth | OAuth refresh, 1 retry |
+| prompt_too_long | Reactive compact, retry |
+| Stream timeout | Non-stream fallback |
+| max_tokens | Escalate (3 tries) |
+| Rate limit | Backoff, emit event |
 
 The non-streaming fallback is a safety net. If streaming fails because of transport issues, the layer retries with `anthropic.beta.messages.create({ stream: false })` and a longer timeout.
 
@@ -317,7 +317,7 @@ interface Tool<Input, Output> {
   name: string
   inputSchema: ZodSchema
   call(args, context, canUseTool, ...)
-  prompt(context)           // system prompt section
+  prompt(context)         // system prompt
   isConcurrencySafe(input)  // can run parallel?
   isReadOnly(input)         // no side effects?
   isDestructive?(input)     // irreversible?
@@ -367,16 +367,16 @@ The key architectural point is that **subagents are nested `query()` calls, not 
 ```
 runAgent():
   1. Generate unique agentId
-  2. Resolve model (agent def → parent → override)
+  2. Resolve model (def → parent → override)
   3. Filter tools:
-     - ALL_AGENT_DISALLOWED: TaskOutput, ExitPlanMode...
+     - AGENT_DISALLOWED: TaskOutput...
      - MCP tools: always allowed
   4. Build agent system prompt
-  5. Optionally omit CLAUDE.md (saves tokens)
+  5. Optionally omit CLAUDE.md
   6. Call query() with:
      - messages: [userMessage(prompt)]
-     - thinkingConfig: { type: 'disabled' }
-     - maxTurns: agentDefinition.maxTurns
+     - thinkingConfig: { disabled }
+     - maxTurns from agent definition
 ```
 
 Thinking is disabled for subagents. This is mainly a cost optimization: subagents are usually focused tasks where extended reasoning adds latency and token cost with limited benefit.
@@ -430,15 +430,15 @@ Claude Code can also **serve** as an MCP server via `claude mcp serve`. This exp
 
 The `services/` directory contains the supporting infrastructure:
 
-| Service | Size | Purpose |
-|---------|------|---------|
-| `api/claude.ts` | 125KB | Streaming API, normalization, retry |
-| `mcp/client.ts` | 119KB | MCP lifecycle, tool invocation |
-| `mcp/auth.ts` | 88KB | OAuth for MCP servers |
-| `compact/compact.ts` | 60KB | Compaction algorithm |
-| `analytics/growthbook.ts` | 40KB | Feature flags, A/B testing |
-| `api/errors.ts` | 41KB | Error classification |
-| `api/withRetry.ts` | 28KB | Exponential backoff |
+| Service | Purpose |
+|---------|---------|
+| api/claude.ts (125KB) | Streaming API, retry |
+| mcp/client.ts (119KB) | MCP lifecycle |
+| mcp/auth.ts (88KB) | OAuth for MCP |
+| compact.ts (60KB) | Compaction |
+| growthbook.ts (40KB) | Feature flags |
+| errors.ts (41KB) | Error classification |
+| withRetry.ts (28KB) | Backoff strategy |
 
 Two services are worth calling out:
 
@@ -467,10 +467,10 @@ Four transport protocols handle the read/write paths between the CLI and remote 
 
 | Transport | Read | Write |
 |-----------|------|-------|
-| WebSocket (v1) | WS, 10s ping | WS, 5min keep-alive |
-| Hybrid (v1) | WS | HTTP POST, 500 batch max |
-| SSE (v2) | SSE, 45s keep-alive | (via CCRClient) |
-| CCRClient (v2) | (via SSE) | POST, 100 batch, coalesce |
+| WebSocket v1 | WS, 10s ping | WS, 5min alive |
+| Hybrid v1 | WS | HTTP POST, 500 max |
+| SSE v2 | SSE, 45s alive | via CCRClient |
+| CCRClient v2 | via SSE | POST, 100 batch |
 
 All transports share one reconnection strategy: a 10-minute budget, 1-30 second exponential backoff, and sleep detection (gap > 60 seconds resets the budget). Close code 4003 (unauthorized) is permanent and does not reconnect.
 
@@ -532,12 +532,12 @@ A singleton state object tracks everything that spans layers:
 
 Claude Code uses four feature-flag layers, each with a different purpose:
 
-| Layer | Mechanism | Override? |
-|-------|-----------|-----------|
-| Compile-time | `feature()` from `bun:bundle` | No — dead code eliminated |
-| Runtime | GrowthBook / Statsig | Server-side, per-org |
-| Settings | `settings.json` hierarchy | User-configurable |
-| Environment | `CLAUDE_*` / `ANTHROPIC_*` vars | Process-level |
+| Layer | Mechanism |
+|-------|-----------|
+| Compile-time | `feature()` — dead code removed |
+| Runtime | GrowthBook, server-side |
+| Settings | `settings.json` hierarchy |
+| Environment | `CLAUDE_*` / `ANTHROPIC_*` |
 
 Compile-time flags are the most important here. Bun dead-code elimination physically removes gated code from the binary, so runtime settings cannot re-enable it.
 
