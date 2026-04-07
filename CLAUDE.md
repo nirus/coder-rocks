@@ -18,9 +18,9 @@ Powered by `cr-engine`. Main branch is `publish`.
 When a blog post needs a diagram, flow chart, or visual explanation, use **Mermaid** (`.mmd` files) rendered to PNG. This avoids SVG XML pitfalls and ensures universal rendering.
 
 **Workflow:**
-1. Create a `.mmd` file in the post directory (e.g. `dream-lifecycle.mmd`)
+1. Create a `.mmd` file in the post's `img/` subdirectory (e.g. `img/dream-lifecycle.mmd`)
 2. Run `npm run diagrams` to render all `.mmd` files to `.png`
-3. Reference in markdown as: `![alt text](filename.png)`
+3. Reference in markdown as: `![alt text](img/filename.png)`
 
 **Mermaid config** lives in `.mermaid/config.json` (dark theme, monospace font, blog color palette). The `diagrams` script uses it automatically.
 
@@ -32,7 +32,7 @@ When a blog post needs a diagram, flow chart, or visual explanation, use **Merma
 - Use `style` directives in `.mmd` files for node-level coloring
 - Output is 2x resolution for retina displays
 
-**IMPORTANT:** Place diagram files (`.mmd`, `.png`, `.svg`) in an `img/` subdirectory inside the post folder. The blog engine treats any image at the post root as a hero candidate. Only `hero.jpg` should be at the root.
+**IMPORTANT:** Place diagram files (`.mmd`, `.png`, `.svg`) in an `img/` subdirectory inside the post folder. The blog engine (cr-engine) treats any image file at the post root as a hero image candidate — placing a `.png` diagram at the root will replace the hero. Only `hero.jpg` should be at the post root.
 
 **Commit both** the `.mmd` source and the `.png` output. The `.mmd` is the editable source of truth; the `.png` is what the blog displays.
 
