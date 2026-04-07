@@ -8,7 +8,7 @@ Claude Code ships as a source-available npm package, but the codebase is large a
 
 This article organizes that full-file read into a layered map. The goal is a practical mental model you can use while reading source, building extensions, or debugging behavior.
 
-![Claude Code — 16 Layers at a Glance](layer-overview.svg)
+![Claude Code — 16 Layers at a Glance](img/layer-overview.svg)
 
 ---
 
@@ -20,7 +20,7 @@ This is the single entry point for all CLI invocations. The key design choice is
 
 The `main()` function implements a decision tree of 8+ fast paths that execute and exit before the heavy imports ever run:
 
-![Bootstrap Fast-Path Decision Tree](bootstrap-fast-path.svg)
+![Bootstrap Fast-Path Decision Tree](img/bootstrap-fast-path.svg)
 
 Three fast paths stand out:
 
@@ -182,7 +182,7 @@ class QueryEngine {
 
 This is the heart of Claude Code: a `while(true)` loop that calls the model, executes requested tools, and feeds results into the next iteration. The loop continues until the model stops requesting tools or a budget limit is reached.
 
-![Complete Request Lifecycle](request-lifecycle.svg)
+![Complete Request Lifecycle](img/request-lifecycle.svg)
 
 ### State Machine
 
@@ -346,7 +346,7 @@ The tool pool spans eight categories:
 
 `StreamingToolExecutor` is where tools run. It manages a four-state pipeline: `queued → executing → completed → yielded`.
 
-![StreamingToolExecutor — Parallel Pipeline](tool-execution.svg)
+![StreamingToolExecutor — Parallel Pipeline](img/tool-execution.svg)
 
 The executor starts running tools **before the model response is complete**. As soon as a tool-use block's input JSON is fully streamed, it validates the schema and begins execution. This overlaps tool work with model output and reduces wall-clock time.
 

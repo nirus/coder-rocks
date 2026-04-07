@@ -32,6 +32,8 @@ When a blog post needs a diagram, flow chart, or visual explanation, use **Merma
 - Use `style` directives in `.mmd` files for node-level coloring
 - Output is 2x resolution for retina displays
 
+**IMPORTANT:** Place diagram files (`.mmd`, `.png`, `.svg`) in an `img/` subdirectory inside the post folder. The blog engine treats any image at the post root as a hero candidate. Only `hero.jpg` should be at the root.
+
 **Commit both** the `.mmd` source and the `.png` output. The `.mmd` is the editable source of truth; the `.png` is what the blog displays.
 
 Small inline annotated snippets (e.g. a 4-line code breakdown) are fine as code blocks — Mermaid diagrams are for structural/architectural visuals.
