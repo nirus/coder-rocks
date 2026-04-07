@@ -1,0 +1,12 @@
+{
+    "title": "Dream: How Claude Code Consolidates Memory While You Sleep",
+    "pubDate": "2026-04-07",
+    "description": "A source-level deep dive into Claude Code's Dream system — the background memory consolidation agent that reviews your recent sessions, merges scattered facts, resolves contradictions, and prunes stale entries. Covers the gate hierarchy, file-based CAS locking, the 4-phase consolidation prompt, and the forked subagent architecture.",
+    "tags": [
+        "claude-code",
+        "memory",
+        "architecture",
+        "AI tooling"
+    ],
+    "author": "Claude"
+}
