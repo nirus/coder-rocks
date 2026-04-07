@@ -1,39 +1,42 @@
 flowchart TD
-    A["User completes a query"] --> B{"Gate Cascade"}
+    A["User completes a query"]
+    A --> B{"Feature flags on?\n· not KAIROS · not remote\n· auto-memory on"}
+    B -->|"no: return 0 cost"| Z["∅"]
+    B -->|yes| C{"24h since last run?\n1 stat() call"}
+    C -->|"no: return"| Z
+    C -->|yes| D{"Scan throttle clear?\n10min in-memory"}
+    D -->|"no: return"| Z
+    D -->|yes| E{"5+ sessions touched?\nreaddir + stat"}
+    E -->|"no: return"| Z
+    E -->|yes| F{"Lock available?\nstat + read"}
+    F -->|"no: return"| Z
+    F -->|yes| G
 
-    B -->|"1. Feature flags off"| X1["return (0 cost)"]
-    B -->|"2. < 24h since last"| X2["return (1 stat)"]
-    B -->|"3. Scan throttle"| X3["return (0 cost)"]
-    B -->|"4. < 5 sessions"| X4["return (readdir)"]
-    B -->|"5. Lock held"| X5["return"]
-    B -->|"All gates pass ✓"| C
+    G["🔒 Acquire CAS Lock\nwrite PID → re-read → verify"]
+    G --> H["⑂ Fork Agent\nisolated context · shared prompt cache"]
 
-    C["Acquire CAS Lock\nWrite PID, verify"] --> D["Fork Agent\nisolated context, shared cache"]
+    H --> P1["Phase 1 · Orient\nls memory dir · read MEMORY.md · skim topics"]
+    P1 --> P2["Phase 2 · Gather\nscan daily logs · grep transcripts · check drift"]
+    P2 --> P3["Phase 3 · Consolidate\nwrite / merge memory files · fix dates"]
+    P3 --> P4["Phase 4 · Prune\nMEMORY.md under 200 lines · remove stale"]
 
-    D --> E["Phase 1: Orient\nls memory, read MEMORY.md"]
-    E --> F["Phase 2: Gather\nlogs, grep transcripts"]
-    F --> G["Phase 3: Consolidate\nwrite/merge memory files"]
-    G --> H["Phase 4: Prune\nindex under 200 lines"]
-
-    H --> I{"Outcome"}
-    I -->|"Success"| S["✓ Improved N memories\nlock mtime advances"]
-    I -->|"Failure"| FL["✗ Rollback lock\nretry in ~10min"]
-    I -->|"User Kill"| K["abort + rollback\ntask marked killed"]
+    P4 --> S["✓ Success — Improved N memories"]
+    P4 --> FL["✗ Failure — rollback lock · retry in ~10m"]
+    P4 --> K["⊘ Kill — abort agent · rollback lock"]
 
     style A fill:#22272e,stroke:#404040,color:#e5e5e5
-    style B fill:#2a2000,stroke:#a08000,color:#e5c34b
-    style C fill:#1a1a2e,stroke:#505080,color:#d4d4d4
-    style D fill:#1a1a2e,stroke:#505080,color:#d4d4d4
-    style E fill:#22272e,stroke:#404040,color:#adbac7
-    style F fill:#22272e,stroke:#404040,color:#adbac7
-    style G fill:#1a2e1a,stroke:#406040,color:#a0d0a0
-    style H fill:#1a2e1a,stroke:#406040,color:#a0d0a0
-    style I fill:#2a2000,stroke:#a08000,color:#e5c34b
+    style B fill:#1a1a1a,stroke:#555,color:#aaa
+    style C fill:#1a1a1a,stroke:#555,color:#aaa
+    style D fill:#1a1a1a,stroke:#555,color:#aaa
+    style E fill:#1a1a1a,stroke:#555,color:#aaa
+    style F fill:#1a1a1a,stroke:#555,color:#aaa
+    style Z fill:#0a0a0a,stroke:#333,color:#444
+    style G fill:#1a1a2e,stroke:#505080,color:#d4d4d4
+    style H fill:#1a1a2e,stroke:#505080,color:#d4d4d4
+    style P1 fill:#22272e,stroke:#404040,color:#adbac7
+    style P2 fill:#22272e,stroke:#404040,color:#adbac7
+    style P3 fill:#1a2e1a,stroke:#406040,color:#a0d0a0
+    style P4 fill:#1a2e1a,stroke:#406040,color:#a0d0a0
     style S fill:#1a2e1a,stroke:#406040,color:#a0d0a0
     style FL fill:#2e1a1a,stroke:#804040,color:#d0a0a0
     style K fill:#2a2000,stroke:#705000,color:#d4b060
-    style X1 fill:#171717,stroke:#262626,color:#666666
-    style X2 fill:#171717,stroke:#262626,color:#666666
-    style X3 fill:#171717,stroke:#262626,color:#666666
-    style X4 fill:#171717,stroke:#262626,color:#666666
-    style X5 fill:#171717,stroke:#262626,color:#666666
