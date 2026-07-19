@@ -1,0 +1,12 @@
+{
+  "title": "Stop Averaging Coding Agents: Route High vs Max by Task Shape",
+  "pubDate": "2026-07-19",
+  "description": "A reproducible coding-agent benchmark shows why one aggregate price hides the useful decision: use High for bounded fixes and reserve Max for discovery-heavy rewrites, migrations, and new builds.",
+  "tags": [
+    "coding-agents",
+    "benchmarks",
+    "codex",
+    "agentic-workflows"
+  ],
+  "author": "Yohji Sakamoto"
+}
