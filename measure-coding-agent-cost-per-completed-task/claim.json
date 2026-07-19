@@ -1,0 +1,12 @@
+{
+  "title": "Token Savings Are Not a Coding-Agent Cost Metric",
+  "pubDate": "2026-07-19",
+  "description": "A reproducible two-run coding-agent experiment shows why local token reductions are a weak headline: evaluate total cost, retries, time, and verified completion together.",
+  "tags": [
+    "coding-agents",
+    "benchmarks",
+    "agentic-workflows",
+    "cost-engineering"
+  ],
+  "author": "Yohji Sakamoto"
+}
