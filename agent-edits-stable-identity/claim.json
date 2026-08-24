@@ -1,0 +1,12 @@
+{
+  "title": "Stable Identity Before Agent Edits: A Compiler Case Study",
+  "pubDate": "2026-08-24",
+  "description": "How SEMAPRAX separates declaration identity from spelling, binds semantic patches to canonical revisions, previews bounded impact, and rejects stale edits before mutation.",
+  "tags": [
+    "coding agents",
+    "compilers",
+    "programming languages",
+    "Rust"
+  ],
+  "author": "Wavect GmbH"
+}
